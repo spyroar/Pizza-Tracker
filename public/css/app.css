@@ -4,6 +4,13 @@ body {
   color: #232323;
 }
 
+.btn-primary {
+  background: #FE5F1E;
+}
+.btn-primary:hover {
+  background: #b23301;
+}
+
 nav li:last-child a {
   background: #FE5F1E;
 }
@@ -35,4 +42,23 @@ section.hero {
   background: #FE5F1E;
   color: #fff;
   border-color: #fff;
+}
+
+section.cart {
+  background: #F8F8F8;
+}
+
+.amount {
+  color: #FE5F1E;
+}
+
+section.login {
+  background: #F8F8F8;
+  min-height: calc(100vh - 110px);
+}
+section.login a {
+  color: #FE5F1E;
+}
+section.login a:hover {
+  color: #b23301;
 }

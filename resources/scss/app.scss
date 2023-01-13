@@ -1,5 +1,5 @@
 @import './variables';
-
+ 
 body{
 
         font-family: 'Lato', sans-serif;
@@ -8,6 +8,15 @@ body{
         
          
        
+}
+
+.btn-primary
+{
+        background: $primary;
+        &:hover
+        {
+                background: $primary-hover;
+        }
 }
 
 nav li:last-child a{
@@ -44,5 +53,25 @@ section.hero{
            background: $primary;
            color: $pure;
            border-color: $pure;
+        }
+}
+
+section.cart{
+          background: $secondary;
+}
+.amount
+{
+        color: $primary;
+}
+section.login
+{
+        background: $secondary;
+        min-height: calc(100vh - 110px);
+        a{
+             color: $primary;
+             &:hover
+             {
+                color: $primary-hover;
+             }
         }
 }
