@@ -45,16 +45,14 @@ function updateCart(pizza) {
 //             })
 //   })
 
-var atc = addToCart.forEach(function (btn) {
+addToCart.forEach(function (btn) {
   btn.addEventListener('click', function (e) {
     // console.log(e);
-
     var pizza = JSON.parse(btn.dataset.pizza);
     // console.log(pizza);
     updateCart(pizza);
   });
 });
-atc - 1;
 
 /***/ }),
 

@@ -41,18 +41,15 @@
 //             })
 //   })
 
-  const atc= addToCart.forEach((btn) => {
+ addToCart.forEach((btn) => {
     btn.addEventListener('click',(e)=>{
         // console.log(e);
-
         let pizza=JSON.parse(btn.dataset.pizza);
         // console.log(pizza);
         updateCart(pizza);
-     
-  
     })
    });
 
-   atc-1
+  
 
    
