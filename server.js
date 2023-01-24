@@ -13,7 +13,7 @@ const session=require('express-session');
 
 const port=process.env.port ||3000;
   require('./app/models/menu')
-
+  app.use(express.static('public'));
   app.use(express.json());
   app.use(express.urlencoded({extended:false}))
   const MongoDbStore=require('connect-mongo');
@@ -84,7 +84,6 @@ app.use((req,res,next)=>{
 })
  //  Set Template Engine
  app.use(expressLayout) ;
-
  app.set('views',path.join(__dirname,'/resources/views'));
  app.set('view engine','ejs');
 
@@ -96,10 +95,8 @@ app.use((req,res,next)=>{
 
 
 // Set Assets
- app.use(express.static('public'));
 
-
-
+ 
 
 app.listen(port,()=>{
 
