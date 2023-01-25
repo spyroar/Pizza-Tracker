@@ -12,16 +12,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! noty */ "./node_modules/noty/lib/noty.js");
+/* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(noty__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function initAdmin() {
+// import { Socket } from 'socket.io';
+
+function initAdmin(socket) {
   var orderTableBody = document.querySelector('#orderTableBody');
   var orders = [];
   var markup;
-  axios__WEBPACK_IMPORTED_MODULE_1__["default"].get('/admin/orders', {
+  axios__WEBPACK_IMPORTED_MODULE_2__["default"].get('/admin/orders', {
     headers: {
       "X-Requested-With": "XMLHttpRequest"
     }
@@ -43,6 +47,16 @@ function initAdmin() {
       return "\n        <tr>\n                     <td class=\"border px-4 py-2 text-green-900\" >\n                          <p>".concat(order._id, "</p>\n                          <div> ").concat(renderItems(order.items), "</div>\n                     </td>\n \n                     <td class=\"border px-4 py-2\"> ").concat(order.customerId.name, "</td>\n                     <td class=\"border px-4 py-2\"> ").concat(order.address, "</td>\n\n\n                     <td class=\"border px-4 py-2\">\n                          \n                     <div class=\"inline-block relative w-64\">\n                         \n                       <form action=\"/admin/order/status\" method=\"POST\" >\n                       <input type=\"hidden\" name=\"orderId\" value=\"").concat(order._id, "\">\n                       <select name=\"status\" onchange=\"this.form.submit()\"\n                         class=\"block appearance-none w-full bg-white border border-gray-400\n                         hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight\n                        focus:outline-none focus:shadow-outline\"\n                       >\n        <option value=\"order_placed\" ").concat(order.status === "order_placed" ? "selected" : "", ">Placed</option>\n         <option value=\"confirmed\" ").concat(order.status === "confirmed" ? "selected" : "", ">Comfirmed</option>\n    <option value=\"prepared\" ").concat(order.status === "prepared" ? "selected" : "", ">Prepared</option>\n    <option value=\"delivered\" ").concat(order.status === "delivered" ? "selected" : "", ">Delivered</option>\n    <option value=\"completed\" ").concat(order.status === "completed" ? "selected" : "", ">Completed</option>\n     \n</select>\n     </form>\n         \n     <div class=\"pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700\">\n     <svg class=\"fill-current h-4 w-4\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 20 20\">\n     <path d=\"M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z\"/></svg>\n   </div>\n                        \n   </div>\n\n   </td>              \n                          \n         <td class=\"border px-4 py-2\"> ").concat(moment__WEBPACK_IMPORTED_MODULE_0___default()(order.createdAt).format('hh:mm A '), "</td>\n\n\n        </tr>\n              ");
     }).join('');
   }
+  socket.on('orderPlaced', function (order) {
+    new (noty__WEBPACK_IMPORTED_MODULE_1___default())({
+      type: "success",
+      timeout: 1000,
+      text: "New Order!"
+    }).show();
+    orders.unshift(order);
+    orderTableBody.innerHTML = '';
+    orderTableBody.innerHTML = generateMarkup(orders);
+  });
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (initAdmin);
 
@@ -58,13 +72,22 @@ function initAdmin() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 /* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! noty */ "./node_modules/noty/lib/noty.js");
 /* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(noty__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 
 //  const initAdmin=require('./admin')
+
 
 var addToCart = document.querySelectorAll('.add-to-cart');
 var cartCounter = document.querySelector('#cartCounter');
@@ -72,7 +95,7 @@ var cartCounter = document.querySelector('#cartCounter');
 // UpdateCart 
 
 function updateCart(pizza) {
-  axios__WEBPACK_IMPORTED_MODULE_2__["default"].post('/update-cart', pizza).then(function (res) {
+  axios__WEBPACK_IMPORTED_MODULE_3__["default"].post('/update-cart', pizza).then(function (res) {
     console.log(res);
     cartCounter.innerText = res.data.totalQty;
     new (noty__WEBPACK_IMPORTED_MODULE_0___default())({
@@ -103,7 +126,63 @@ if (alertMsg) {
     alertMsg.remove();
   }, 2000);
 }
-(0,_admin__WEBPACK_IMPORTED_MODULE_1__["default"])();
+
+// Change Order Status
+var statuses = document.querySelectorAll('.status_line');
+// console.log(statuses);
+var hiddenInput = document.getElementById('hiddenInput');
+var order = hiddenInput ? hiddenInput.value : null;
+order = JSON.parse(order);
+var time = document.createElement('small');
+// console.log(order);  
+function updateStatus(order) {
+  statuses.forEach(function (status) {
+    status.classList.remove('step-completed');
+    status.classList.remove('current');
+  });
+  var stepCompleted = true;
+  statuses.forEach(function (status) {
+    var dataProp = status.dataset.status;
+    if (stepCompleted) {
+      status.classList.add('step-completed');
+    }
+    if (dataProp === order.status) {
+      stepCompleted = false;
+      time.innerText = moment__WEBPACK_IMPORTED_MODULE_2___default()(order.updatedAt).format('hh:mm A');
+      status.appendChild(time);
+      if (status.nextElementSibling) {
+        status.nextElementSibling.classList.add('current');
+      }
+    }
+  });
+}
+updateStatus(order);
+
+//  Socket
+
+var socket = io();
+(0,_admin__WEBPACK_IMPORTED_MODULE_1__["default"])(socket);
+if (order) {
+  // Join
+  socket.emit('join', "order_".concat(order._id));
+}
+var AdminAreaPath = window.location.pathname;
+console.log(AdminAreaPath);
+if (AdminAreaPath.includes('admin')) {
+  socket.emit('join', 'adminRoom');
+}
+socket.on('orderUpdated', function (data) {
+  var updatedOrder = _objectSpread({}, order);
+  updatedOrder.updatedAt = moment__WEBPACK_IMPORTED_MODULE_2___default()().format();
+  updatedOrder.status = data.status;
+  // console.log(data);
+  updateStatus(updatedOrder);
+  new (noty__WEBPACK_IMPORTED_MODULE_0___default())({
+    type: "success",
+    timeout: 1000,
+    text: "Order Updated"
+  }).show();
+});
 
 /***/ }),
 

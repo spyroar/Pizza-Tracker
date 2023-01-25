@@ -10,6 +10,7 @@ const expressLayout = require('express-ejs-layouts');
 const flash=require('express-flash');
 const passport=require('passport');
 const session=require('express-session');
+const Emitter=require('events')
 
 const port=process.env.port ||3000;
   require('./app/models/menu')
@@ -17,6 +18,7 @@ const port=process.env.port ||3000;
   app.use(express.json());
   app.use(express.urlencoded({extended:false}))
   const MongoDbStore=require('connect-mongo');
+
 
   //  database Cinnection
 
@@ -32,8 +34,7 @@ const port=process.env.port ||3000;
       console.log(err);
     });
 
-
-
+   
 
  //   Session store
 
@@ -42,6 +43,11 @@ let mongostore= new MongoDbStore({
      collectionName:'sessions'
 })
 
+
+ // Event Emitter
+
+   const eventEmitter= new Emitter();
+   app.set('eventEmitter',eventEmitter)
 
 
 
@@ -68,7 +74,8 @@ let mongostore= new MongoDbStore({
 
 // passport config
 
-const passportInit=require('./app/config/passport')
+const passportInit=require('./app/config/passport');
+const { join } = require('path');
 passportInit(passport);
 app.use(passport.initialize());
 app.use(passport.session())
@@ -98,8 +105,30 @@ app.use((req,res,next)=>{
 
  
 
-app.listen(port,()=>{
+const server= app.listen(port,()=>{
 
       console.log(`Port is listening on ${port}`);
 }
 )
+
+// Socket.io
+
+const io=require('socket.io')(server)
+
+  io.on('connection',(socket)=>{
+      // join
+      // console.log(socket.id);
+      socket.on('join',(orderId)=>{
+         console.log(orderId);
+        socket.join(orderId)
+      })
+  })
+
+
+  eventEmitter.on('orderUpdated',(data)=>{
+    io.to(`order_${data.id}`).emit('orderUpdated',data)
+  })
+
+  eventEmitter.on('orderPlaced',(data)=>{
+     io.to('adminRoom').emit('orderPlaced',data)
+  })

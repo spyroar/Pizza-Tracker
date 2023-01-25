@@ -28,9 +28,18 @@ function orderController()
            });
        
              order.save().then(result=>{
+
+                Order.populate(result,{path:'customerId'},(err, placeOrder)=>{
+
                   req.flash('success','Order placed SuccessFully');
                   delete req.session.cart;
+                     //  Emit Event
+                      const eventEmitter=req.app.get('eventEmitter');
+                      eventEmitter.emit('orderPlaced',placeOrder)
                   return res.redirect('/customer/orders')
+
+                })
+                  
              }).catch(err=>{
                  req.flash('error','Something went wrong');
                  return res.redirect('/cart')
@@ -47,7 +56,24 @@ function orderController()
                   
                   res.render('customer/orders',{orders:orders,moment:moment})
                 //  console.log(order); 
-          }
+          },
+
+        async show (req,res){
+
+                const order=await Order.findById(req.params.id);
+
+            //     Authorie User
+
+              if(req.user._id.toString() === order.customerId.toString())
+              {
+                  return res.render('customer/singleOrder',{order});
+              }
+
+                return res.redirect('/');
+
+
+
+         }
     }
 }
 
