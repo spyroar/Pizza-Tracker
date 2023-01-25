@@ -104,7 +104,7 @@ import moment from "moment";
 
     let socket=io();
 
-    initAdmin(socket);
+    
 
     if(order)
     {
@@ -113,8 +113,10 @@ import moment from "moment";
     }
 
     let AdminAreaPath=window.location.pathname;
-    console.log(AdminAreaPath);
+    // console.log(AdminAreaPath);
     if (AdminAreaPath.includes('admin')) {
+
+      initAdmin(socket);
        socket.emit('join','adminRoom')
       
     }

@@ -24,7 +24,7 @@ const port=process.env.port ||3000;
 
   const db='mongodb://127.0.0.1:27017/pizza';
 
-  mongoose.connect(db);
+  mongoose.connect(process.env.MONGO_CONNECTION_URL);
 
   const connection=mongoose.connection;
   connection.once('open', function () {
@@ -98,7 +98,11 @@ app.use((req,res,next)=>{
 
 //  Inport initRoutes function
 
-  require('./routes/web')(app)
+ require('./routes/web')(app)
+ const url = require('url');
+  app.use((req,res)=>{
+       res.status(404).send(`<h1>${req.url} Page Not Found 404</h1>`)
+  })
 
 
 // Set Assets
