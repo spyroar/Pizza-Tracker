@@ -4,6 +4,7 @@
 //  const initAdmin=require('./admin')
 import initAdmin from "./admin";
 import moment from "moment";
+  import { initStripe } from "./stripe";
  
  
  let addToCart=document.querySelectorAll('.add-to-cart');
@@ -100,11 +101,12 @@ import moment from "moment";
 
    updateStatus(order)
 
+   initStripe()
+  
   //  Socket
 
     let socket=io();
 
-    
 
     if(order)
     {

@@ -22,7 +22,7 @@ const port=process.env.port ||3000;
 
   //  database Cinnection
 
-  const db='mongodb://127.0.0.1:27017/pizza';
+  // const db='mongodb://127.0.0.1:27017/pizza';
 
   mongoose.connect(process.env.MONGO_CONNECTION_URL);
 
@@ -38,10 +38,10 @@ const port=process.env.port ||3000;
 
  //   Session store
 
-let mongostore= new MongoDbStore({
-     mongoUrl:db,
-     collectionName:'sessions'
-})
+// let mongostore= new MongoDbStore({
+//      mongoUrl:db,
+//      collectionName:'sessions'
+// })
 
 
  // Event Emitter
@@ -59,7 +59,10 @@ let mongostore= new MongoDbStore({
          secret:process.env.COOKIE_SECRET,
          resave:false,
          saveUninitialized:false,
-         store:mongostore,
+        //  store:mongostore,
+        store:MongoDbStore.create({
+              mongoUrl:process.env.MONGO_CONNECTION_URL
+        }),
          cookie:{maxAge:1000*60*60*24}  //24 hours
       
  }));
